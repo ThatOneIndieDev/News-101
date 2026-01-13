@@ -1,0 +1,17 @@
+# =====================
+# Secrets (VERY IMPORTANT)
+# =====================
+Secrets.plist
+*.env
+
+# =====================
+# Xcode / Swift
+# =====================
+DerivedData/
+xcuserdata/
+*.xcuserstate
+
+# =====================
+# macOS
+# =====================
+.DS_Store
