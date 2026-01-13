@@ -7,9 +7,76 @@
 
 import SwiftUI
 
+enum ChosenCategory {
+    case news
+    case watch
+    case topics
+    case profile
+}
+
 struct Footer: View {
+
+    @State private var mode: ChosenCategory = .news
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack(spacing: 0) {
+            
+            footerButton(
+                icon: "newspaper",
+                title: "News",
+                category: .news
+            )
+
+            footerButton(
+                icon: "play.rectangle",
+                title: "Watch",
+                category: .watch
+            )
+
+            footerButton(
+                icon: "text.badge.star",
+                title: "Topics",
+                category: .topics
+            )
+
+            footerButton(
+                icon: "person.crop.circle",
+                title: "Profile",
+                category: .profile
+            )
+        }
+        .padding(.horizontal, 24)
+    }
+}
+
+extension Footer{
+    // MARK: - Footer Button
+    private func footerButton(
+        icon: String,
+        title: String,
+        category: ChosenCategory
+    ) -> some View {
+
+        Button {
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                mode = category
+            }
+        } label: {
+            VStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(
+                        mode == category ? .white : .white.opacity(0.3)
+                    )
+
+                Text(title)
+                    .font(.caption)
+                    .foregroundColor(
+                        mode == category ? .white : .white.opacity(0.6)
+                    )
+            }
+            .frame(maxWidth: .infinity)
+        }
     }
 }
 
