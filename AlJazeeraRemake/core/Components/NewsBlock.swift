@@ -26,7 +26,7 @@ struct NewsBlock: View {
                     }
                 } label: {
                     headingText(
-                        "Following",
+                        "Latest",
                         active: selectedCategory == .latest
                     )
                 }

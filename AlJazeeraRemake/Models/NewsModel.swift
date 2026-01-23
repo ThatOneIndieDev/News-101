@@ -18,7 +18,8 @@ struct NewsModel: Codable {
 }
 
 // MARK: - Article
-struct Article: Codable {
+struct Article: Codable, Identifiable {
+    var id: String { url }
     let source: Source
     let author: String?
     let title: String

@@ -5,36 +5,99 @@
 //  Created by Syed Abrar Shah on 13/01/2026.
 //
 
-// This is the main screen that will have the front page of the news
-
 import SwiftUI
 
 struct MainScreen: View {
-    
-    private let colums = [
-        GridItem(.flexible(), spacing: 16)
-    ]
-    
+    @State private var selectedTab: ChosenCategory = .news
     
     var body: some View {
-        AlJazeera_Logo()
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: 16){
-                NewsBlock()
+        VStack(spacing: 0) {
+            // Content area based on selected tab
+            TabView(selection: $selectedTab) {
+                NewsTab()
+                    .tag(ChosenCategory.news)
                 
-                LazyVGrid(columns: self.colums, spacing: 16) {
-                    ForEach(0..<10, id: \.self) { _ in
+                WatchTab()
+                    .tag(ChosenCategory.watch)
+                
+                TopicsTab()
+                    .tag(ChosenCategory.topics)
+                
+                ProfileTab()
+                    .tag(ChosenCategory.profile)
+            }
+            .tabViewStyle(.page(indexDisplayMode: .never)) // Prevents default tab bar
+            
+            // Custom footer
+            Footer(selectedTab: $selectedTab)
+        }
+    }
+}
+
+// MARK: - News Tab
+struct NewsTab: View {
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 0) {
+                AlJazeera_Logo()
+                
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 16) {
+                        NewsBlock()
                         NewsFetchBlock()
                     }
                 }
             }
+            .navigationBarHidden(true)
         }
-        Spacer()
-        Footer()
+    }
+}
+
+// MARK: - Watch Tab
+struct WatchTab: View {
+    var body: some View {
+        NavigationView {
+            VStack {
+                Text("Watch Section")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                // Add your watch content here
+            }
+            .navigationTitle("Watch")
+        }
+    }
+}
+
+// MARK: - Topics Tab
+struct TopicsTab: View {
+    var body: some View {
+        NavigationView {
+            VStack {
+                Text("Topics Section")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                // Add your topics content here
+            }
+            .navigationTitle("Topics")
+        }
+    }
+}
+
+// MARK: - Profile Tab
+struct ProfileTab: View {
+    var body: some View {
+        NavigationView {
+            VStack {
+                Text("Profile Section")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                // Add your profile content here
+            }
+            .navigationTitle("Profile")
+        }
     }
 }
 
 #Preview {
     MainScreen()
 }
-

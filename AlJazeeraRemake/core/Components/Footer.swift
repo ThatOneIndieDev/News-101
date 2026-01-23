@@ -15,30 +15,25 @@ enum ChosenCategory {
 }
 
 struct Footer: View {
-
-    @State private var mode: ChosenCategory = .news
-
+    @Binding var selectedTab: ChosenCategory
+    
     var body: some View {
         HStack(spacing: 0) {
-            
             footerButton(
                 icon: "newspaper",
                 title: "News",
                 category: .news
             )
-
             footerButton(
                 icon: "play.rectangle",
                 title: "Watch",
                 category: .watch
             )
-
             footerButton(
                 icon: "text.badge.star",
                 title: "Topics",
                 category: .topics
             )
-
             footerButton(
                 icon: "person.crop.circle",
                 title: "Profile",
@@ -46,33 +41,33 @@ struct Footer: View {
             )
         }
         .padding(.horizontal, 24)
+        .padding(.vertical, 8)
+        .background(Color.black.opacity(0.95))
     }
 }
 
-extension Footer{
+extension Footer {
     // MARK: - Footer Button
     private func footerButton(
         icon: String,
         title: String,
         category: ChosenCategory
     ) -> some View {
-
         Button {
             withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-                mode = category
+                selectedTab = category
             }
         } label: {
             VStack(spacing: 4) {
                 Image(systemName: icon)
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(
-                        mode == category ? .white : .white.opacity(0.3)
+                        selectedTab == category ? .white : .white.opacity(0.3)
                     )
-
                 Text(title)
                     .font(.caption)
                     .foregroundColor(
-                        mode == category ? .white : .white.opacity(0.6)
+                        selectedTab == category ? .white : .white.opacity(0.6)
                     )
             }
             .frame(maxWidth: .infinity)
@@ -81,5 +76,5 @@ extension Footer{
 }
 
 #Preview {
-    Footer()
+    Footer(selectedTab: .constant(.news))
 }
