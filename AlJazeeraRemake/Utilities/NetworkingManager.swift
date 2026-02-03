@@ -22,6 +22,28 @@ class NetworkingManager{
         }
     }
     
+    // SYNC THROWS IS MUCH MORE EASY TO USE AND UNDERSTAND RATHER THAN COMBINE
+    
+    static func download(url: URLRequest) async throws -> Data {
+        
+        var attempts = 0
+        var lastError: Error?
+        
+        while attempts < 3{
+            do{
+                let (data, response) = try await URLSession.shared.data(for: url)
+                print("Success")
+                return try NetworkingManager.handleURLResponse(output: (data, response), url: url)
+                
+            } catch {
+                attempts += 1
+                var lastError = error
+                print(error.localizedDescription)
+            }
+        }
+        throw lastError ?? URLError(.unknown)
+    }
+    
     static func download(url: URLRequest) -> AnyPublisher<Data, Error> { // Returns with a combine publisher that gives data but can fail with an error
         
         return URLSession.shared.dataTaskPublisher(for: url) // Starts a URL session to get data from the passed URL
