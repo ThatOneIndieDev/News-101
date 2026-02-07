@@ -35,7 +35,7 @@ class NewsFetchService: ObservableObject {
         }
         
         // Build URL with API key as query parameter
-        guard let url = URL(string: "https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=\(apiKey)") else {
+        guard let url = URL(string: "https://newsapi.org/v2/top-headlines?sources=al-jazeera-english&apiKey=\(apiKey)") else {
             errorMessage = "Invalid URL"
             return
         }

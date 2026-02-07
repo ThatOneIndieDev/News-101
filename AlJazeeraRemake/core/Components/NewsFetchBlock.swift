@@ -30,6 +30,7 @@ struct NewsFetchBlock: View {
     var body: some View {
         VStack(spacing: 16) {
             if showLiveUpdates {
+                refreshButton
                 liveButton
             }
             
@@ -157,7 +158,7 @@ struct ArticleDetailView: View {
                                 .background(Color.blue)
                                 .foregroundStyle(.white)
                                 .cornerRadius(10)
-                            .padding(.top, 8)
+                                .padding(.top, 8)
                         }
                     }
                     .padding(.horizontal, 16)
@@ -310,6 +311,33 @@ struct ArticleCard: View {
 }
 
 extension NewsFetchBlock {
+    
+    private var refreshButton: some View {
+        Button {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                vm.refreshNews()
+            }
+        } label: {
+            HStack(spacing: 8) {
+                if vm.isLoading {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .scaleEffect(0.9)
+                } else {
+                    Image(systemName: "arrow.clockwise.circle.fill")
+                        .font(.system(size: 18, weight: .bold))
+                }
+                Text("Refresh")
+                    .font(.subheadline.weight(.semibold))
+            }
+            .foregroundStyle(Color.white)
+            .padding(.vertical, 6)
+            .padding(.horizontal, 10)
+            .background(Color.white.opacity(0.12))
+            .clipShape(Capsule())
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
     
     private var liveButton: some View {
         HStack(spacing: 8) {
