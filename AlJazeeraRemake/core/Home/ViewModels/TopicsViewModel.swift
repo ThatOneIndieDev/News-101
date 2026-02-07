@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 import Combine
 
 struct Topic: Identifiable, Hashable {
@@ -35,6 +36,26 @@ final class TopicsViewModel: ObservableObject {
     
     @Published private var selectedIDs: Set<String> = []
     
+    private let preferencesService = UserPreferencesService()
+    private var authHandle: AuthStateDidChangeListenerHandle?
+    
+    init() {
+        authHandle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
+            Task {
+                if user == nil {
+                    await self?.reset()
+                } else {
+                    await self?.loadSelectedTopics()
+                }
+            }
+        }
+    }
+    
+    deinit {
+        if let handle = authHandle {
+            Auth.auth().removeStateDidChangeListener(handle)
+        }
+    }
     private let topicKeywords: [String: [String]] = [
         "World": ["global", "international", "world", "united nations", "summit", "diplomacy"],
         "Politics": ["election", "parliament", "president", "government", "policy", "vote", "minister"],
@@ -68,6 +89,7 @@ final class TopicsViewModel: ObservableObject {
         } else {
             selectedIDs.insert(topic.id)
         }
+        Task { await saveSelectedTopics() }
     }
     
     func topics(for article: Article) -> [Topic] {
@@ -85,5 +107,31 @@ final class TopicsViewModel: ObservableObject {
     
     func selectedArticles(from articles: [Article]) -> [Article] {
         articles.filter { matchesSelectedTopics($0) }
+    }
+    
+    @MainActor
+    func loadSelectedTopics() async {
+        do {
+            if let prefs = try await preferencesService.load() {
+                selectedIDs = Set(prefs.selectedTopicIDs)
+            } else {
+                selectedIDs = []
+            }
+        } catch {
+            // Silently fail for now
+        }
+    }
+    
+    @MainActor
+    func reset() async {
+        selectedIDs = []
+    }
+    
+    private func saveSelectedTopics() async {
+        do {
+            try await preferencesService.saveSelectedTopics(Array(selectedIDs))
+        } catch {
+            // Silently fail for now
+        }
     }
 }

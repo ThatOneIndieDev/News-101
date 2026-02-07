@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TopicsTab: View {
+    @ObservedObject var authVM: AuthViewModel
     @ObservedObject var newsVM: NewsArticleViewModel
     @StateObject private var vm = TopicsViewModel()
     
@@ -94,6 +95,11 @@ struct TopicsTab: View {
                 }
             }
             .navigationTitle("Topics")
+            .task {
+                if authVM.isAuthenticated {
+                    await vm.loadSelectedTopics()
+                }
+            }
         }
     }
     
@@ -155,7 +161,7 @@ private struct TopicCapsule: View {
 }
 
 #Preview {
-    TopicsTab(newsVM: NewsArticleViewModel())
+    TopicsTab(authVM: AuthViewModel(), newsVM: NewsArticleViewModel())
         .preferredColorScheme(.dark)
 }
 

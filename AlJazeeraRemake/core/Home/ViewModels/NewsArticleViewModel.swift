@@ -7,6 +7,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import FirebaseAuth
 
 
 class NewsArticleViewModel: ObservableObject{
@@ -19,6 +20,8 @@ class NewsArticleViewModel: ObservableObject{
     
     private let newsService = NewsFetchService()
     private var cancellables = Set<AnyCancellable>()
+    private let preferencesService = UserPreferencesService()
+    private var authHandle: AuthStateDidChangeListenerHandle?
     
 
     
@@ -35,6 +38,21 @@ class NewsArticleViewModel: ObservableObject{
     
     init() {
         setupSubscriptions()
+        authHandle = Auth.auth().addStateDidChangeListener { [weak self] _, _ in
+            Task {
+                if Auth.auth().currentUser == nil {
+                    await self?.resetFollowed()
+                } else {
+                    await self?.loadFollowed()
+                }
+            }
+        }
+    }
+    
+    deinit {
+        if let handle = authHandle {
+            Auth.auth().removeStateDidChangeListener(handle)
+        }
     }
     
     private func setupSubscriptions(){
@@ -94,10 +112,37 @@ class NewsArticleViewModel: ObservableObject{
         } else {
             followedIDs.insert(article.id)
         }
+        Task { await saveFollowed() }
     }
     
     var followedArticles: [Article] {
         articles.filter { followedIDs.contains($0.id) }
+    }
+    
+    @MainActor
+    private func loadFollowed() async {
+        do {
+            if let prefs = try await preferencesService.load() {
+                followedIDs = Set(prefs.followedArticleIDs)
+            } else {
+                followedIDs = []
+            }
+        } catch {
+            // Silently fail for now
+        }
+    }
+    
+    @MainActor
+    private func resetFollowed() async {
+        followedIDs = []
+    }
+    
+    private func saveFollowed() async {
+        do {
+            try await preferencesService.saveFollowedArticles(Array(followedIDs))
+        } catch {
+            // Silently fail for now
+        }
     }
 }
     

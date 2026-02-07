@@ -10,6 +10,7 @@ import SwiftUI
 struct MainScreen: View {
     @State private var selectedTab: ChosenCategory = .news
     @StateObject private var newsVM = NewsArticleViewModel()
+    @StateObject private var authVM = AuthViewModel()
     
     var body: some View {
         VStack(spacing: 0) {
@@ -21,10 +22,10 @@ struct MainScreen: View {
                 AnalyticsTab(newsVM: newsVM)
                     .tag(ChosenCategory.analytics)
                 
-                TopicsTab(newsVM: newsVM)
+                TopicsTab(authVM: authVM, newsVM: newsVM)
                     .tag(ChosenCategory.topics)
                 
-                ProfileTab()
+                ProfileTab(authVM: authVM)
                     .tag(ChosenCategory.profile)
             }
             .tabViewStyle(.page(indexDisplayMode: .never)) // Prevents default tab bar

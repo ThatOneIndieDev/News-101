@@ -2,6 +2,7 @@
 # Secrets (VERY IMPORTANT)
 # =====================
 Secrets.plist
+AlJazeeraRemake/Secrets/
 *.env
 
 # =====================
