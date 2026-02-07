@@ -9,7 +9,7 @@ import SwiftUI
 
 enum ChosenCategory {
     case news
-    case watch
+    case analytics
     case topics
     case profile
 }
@@ -25,9 +25,9 @@ struct Footer: View {
                 category: .news
             )
             footerButton(
-                icon: "play.rectangle",
-                title: "Watch",
-                category: .watch
+                icon: "chart.line.uptrend.xyaxis",
+                title: "Analytics",
+                category: .analytics
             )
             footerButton(
                 icon: "text.badge.star",

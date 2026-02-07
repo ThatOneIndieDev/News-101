@@ -14,8 +14,7 @@ enum SelectedCategory {
 
 
 struct NewsBlock: View {
-    
-    @State private var selectedCategory: SelectedCategory = .latest
+    @Binding var selectedCategory: SelectedCategory
     
     var body: some View {
         VStack(spacing: 8) {
@@ -87,6 +86,6 @@ extension NewsBlock{
 #Preview {
     ZStack {
         Color.black.ignoresSafeArea()
-        NewsBlock()
+        NewsBlock(selectedCategory: .constant(.latest))
     }
 }

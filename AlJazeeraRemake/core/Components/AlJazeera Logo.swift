@@ -22,14 +22,13 @@ struct AlJazeera_Logo: View {
 
 extension AlJazeera_Logo{
     private var logo_Image: some View{
-        Image("Al Jazeera Logo")
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(height: 40)
+        Image(systemName: "newspaper.fill")
+            .font(.system(size: 26, weight: .bold))
+            .foregroundStyle(Color(.secondaryLabel))
     }
     private var logo_Text: some View{
-        Text("Al Jazeera")
-            .font(.custom("Typeface", size: 24, relativeTo: .headline))
+        Text("News 101")
+            .font(.title2.weight(.semibold))
             .foregroundStyle(Color(.secondaryLabel))
             .padding(.leading)
     }

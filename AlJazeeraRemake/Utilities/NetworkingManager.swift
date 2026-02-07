@@ -37,7 +37,7 @@ class NetworkingManager{
                 
             } catch {
                 attempts += 1
-                var lastError = error
+                lastError = error
                 print(error.localizedDescription)
             }
         }

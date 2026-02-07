@@ -9,18 +9,19 @@ import SwiftUI
 
 struct MainScreen: View {
     @State private var selectedTab: ChosenCategory = .news
+    @StateObject private var newsVM = NewsArticleViewModel()
     
     var body: some View {
         VStack(spacing: 0) {
             // Content area based on selected tab
             TabView(selection: $selectedTab) {
-                NewsTab()
+                NewsTab(newsVM: newsVM)
                     .tag(ChosenCategory.news)
                 
-                WatchTab()
-                    .tag(ChosenCategory.watch)
+                AnalyticsTab(newsVM: newsVM)
+                    .tag(ChosenCategory.analytics)
                 
-                TopicsTab()
+                TopicsTab(newsVM: newsVM)
                     .tag(ChosenCategory.topics)
                 
                 ProfileTab()
@@ -36,64 +37,21 @@ struct MainScreen: View {
 
 // MARK: - News Tab
 struct NewsTab: View {
+    @ObservedObject var newsVM: NewsArticleViewModel
+    @State private var selectedCategory: SelectedCategory = .latest
+    
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 0) {
                 AlJazeera_Logo()
                 
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 16) {
-                        NewsBlock()
-                        NewsFetchBlock()
+                        NewsBlock(selectedCategory: $selectedCategory)
+                        NewsFetchBlock(vm: newsVM, selectedCategory: selectedCategory)
                     }
                 }
             }
-            .navigationBarHidden(true)
-        }
-    }
-}
-
-// MARK: - Watch Tab
-struct WatchTab: View {
-    var body: some View {
-        NavigationView {
-            VStack {
-                Text("Watch Section")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                // Add your watch content here
-            }
-            .navigationTitle("Watch")
-        }
-    }
-}
-
-// MARK: - Topics Tab
-struct TopicsTab: View {
-    var body: some View {
-        NavigationView {
-            VStack {
-                Text("Topics Section")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                // Add your topics content here
-            }
-            .navigationTitle("Topics")
-        }
-    }
-}
-
-// MARK: - Profile Tab
-struct ProfileTab: View {
-    var body: some View {
-        NavigationView {
-            VStack {
-                Text("Profile Section")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                // Add your profile content here
-            }
-            .navigationTitle("Profile")
         }
     }
 }

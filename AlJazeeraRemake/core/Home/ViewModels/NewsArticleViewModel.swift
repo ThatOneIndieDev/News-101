@@ -15,6 +15,7 @@ class NewsArticleViewModel: ObservableObject{
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     @Published var searchText: String = ""
+    @Published private(set) var followedIDs: Set<String> = []
     
     private let newsService = NewsFetchService()
     private var cancellables = Set<AnyCancellable>()
@@ -82,7 +83,22 @@ class NewsArticleViewModel: ObservableObject{
     var articlesCount: Int {
         filteredArticles.count
     }
+    
+    func isFollowed(_ article: Article) -> Bool {
+        followedIDs.contains(article.id)
+    }
+    
+    func toggleFollow(_ article: Article) {
+        if followedIDs.contains(article.id) {
+            followedIDs.remove(article.id)
+        } else {
+            followedIDs.insert(article.id)
+        }
+    }
+    
+    var followedArticles: [Article] {
+        articles.filter { followedIDs.contains($0.id) }
+    }
 }
     
     
-
