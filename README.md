@@ -1,4 +1,4 @@
-# AlJazeeraRemake
+# News-101
 
 A clean SwiftUI remake of the Al Jazeera experience with a custom tab bar, live news feed, analytics summaries, topic personalization, and Firebase authentication.
 
